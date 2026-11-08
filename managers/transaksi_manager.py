@@ -115,3 +115,9 @@ class TransaksiManager:
             hitung[nim][1] += 1
         return sorted((tuple(v) for v in hitung.values()),
                       key=lambda x: (-x[1], x[0].nim))
+
+    def pulihkan(self, trx: Transaksi) -> None:
+        self.__data[trx.id_transaksi] = trx
+        angka = trx.id_transaksi.rsplit("-", 1)[-1]
+        if angka.isdigit():
+            self.__counter = max(self.__counter, int(angka))
