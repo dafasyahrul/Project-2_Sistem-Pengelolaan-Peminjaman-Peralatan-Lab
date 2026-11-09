@@ -21,7 +21,7 @@ def main() -> None:
 
     for pesan in penyimpanan.muat():
         print(f"[PERINGATAN] {pesan}")
-    jumlah = (len(mahasiswa_mgr.semua()), len(alat_mgr()), len(transaksi_mgr()))
+    jumlah = (len(mahasiswa_mgr.semua()), len(alat_mgr.semua()), len(transaksi_mgr.semua()))
     if any(jumlah):
         print(f"Data dimuat dari CSV: {jumlah[[0]]} mahasiswa, "
               f"{jumlah[1]} alat, {jumlah[2]} transaksi.")
