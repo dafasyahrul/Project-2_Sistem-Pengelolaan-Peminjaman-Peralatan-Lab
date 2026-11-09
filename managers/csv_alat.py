@@ -1,3 +1,4 @@
+"""Penyimpanan CSV untuk kategori dan alat (data/kategori.csv, data/alat.csv)."""
 from managers.csv_dasar import baca_csv, teks, tulis_csv
 from models.enums import KondisiAlat
 
