@@ -2,6 +2,7 @@ import sys
 
 from managers.alat_manager import AlatManager
 from managers.mahasiswa_manager import MahasiswaManager
+from managers.penyimpanan_csv import PenyimpananCSV
 from managers.transaksi_manager import TransaksiManager
 from menu_app import MenuApp
 
@@ -16,10 +17,21 @@ def main() -> None:
     mahasiswa_mgr = MahasiswaManager()
     alat_mgr = AlatManager()
     transaksi_mgr = TransaksiManager(mahasiswa_mgr, alat_mgr)
+    penyimpanan = PenyimpananCSV(mahasiswa_mgr, alat_mgr, transaksi_mgr)
+
+    for pesan in penyimpanan.muat():
+        print(f"[PERINGATAN] {pesan}")
+    jumlah = (len(mahasiswa_mgr.semua()), len(alat_mgr()), len(transaksi_mgr()))
+    if any(jumlah):
+        print(f"Data dimuat dari CSV: {jumlah[[0]]} mahasiswa, "
+              f"{jumlah[1]} alat, {jumlah[2]} transaksi.")
+        
     if "--demo" in sys.argv:
         muat_data_contoh(mahasiswa_mgr, alat_mgr)
+        penyimpanan.simpan_semua()
         print("[Mode demo] Data contoh dimuat.")
-    MenuApp(mahasiswa_mgr, alat_mgr, transaksi_mgr).jalankan()
+
+    MenuApp(mahasiswa_mgr, alat_mgr, transaksi_mgr, penyimpanan).jalankan()
 
 if __name__ == "__main__":
     main()

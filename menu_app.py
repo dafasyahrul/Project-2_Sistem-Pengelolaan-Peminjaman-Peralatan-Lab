@@ -210,7 +210,8 @@ class MenuApp:
             print("\n--- Laporan ---")
             print("1. Alat tersedia\n2. Alat sedang dipinjam\n3. Alat rusak\n"
                   "4. Riwayat mahasiswa (transaksi selesai)\n5. Transaksi aktif\n"
-                  "6. Rincian alat yang belum kembali\n0. Kembali")
+                  "6. Rincian alat yang belum kembali\n7. Statistik peminjaman\n"
+                  "0. Kembali")
             pil = input("Pilih: ").strip()
             if pil == "0":
                 return
@@ -234,5 +235,37 @@ class MenuApp:
             elif pil == "6":
                 self.__tampilkan_daftar(self.__transaksi_mgr.alat_sedang_dipinjam(),
                                         "Tidak ada alat yang belum kembali.")
+            elif pil == "7":
+                self.__tampilkan_statistik()
             else:
                 print("Pilihan tidak valid.")
+
+    def __tampilkan_peringkat(self, judul: str, peringkat: list, deskripsi,
+                              satuan: str, batas: int = 5) -> None:
+        print(f"\n{judul}")
+        if not peringkat:
+            print("  Belum ada data peminjaman.")
+            return
+        tertinggi = peringkat[0][1]
+        juara = [p for p in peringkat if p[1] == tertinggi]
+        nama_juara = ", ".join(deskripsi(p) for p in juara)
+        keterangan = "masing-masing " if len(juara) > 1 else ""
+        print(f"  Terbanyak: {nama_juara} - {keterangan}{tertinggi} {satuan}")
+        print(f"  Peringkat {batas} teratas:")
+        for urutan, p in enumerate(peringkat[:batas], 1):
+            print(f"   {urutan}. {deskripsi(p)} - {p[1]} {satuan}")
+
+    def __tampilkan_statistik(self) -> None:
+        print("\n=== STATISTIK PEMINJAMAN ===")
+        print(f"Jumlah transaksi selesai : "
+              f"{self.__transaksi_mgr.jumlah_transaksi_selesai()}")
+        print(f"Jumlah transaksi aktif   : "
+              f"{self.__transaksi_mgr.jumlah_transaksi_aktif()}")
+        self.__tampilkan_peringkat(
+            "Alat yang paling sering dipinjam:",
+            self.__transaksi_mgr.alat_paling_sering_dipinjam(),
+            lambda p: f"{p[0].nama} ({p[0].kode}, total {p[2]} unit)", "transaksi")
+        self.__tampilkan_peringkat(
+            "Mahasiswa yang paling sering meminjam:",
+            self.__transaksi_mgr.mahasiswa_paling_sering_meminjam(),
+            lambda p: f"{p[0].nama} ({p[0].nim})", "transaksi")
