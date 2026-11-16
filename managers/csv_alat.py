@@ -47,7 +47,7 @@ class CsvAlat:
         return peringatan
 
     def hitung_stok(self, daftar_transaksi: list) -> list[str]:
-        """Menghitung stok tiap alat dari transaksi. Dipanggil SETELAH transaksi dimuat."""
+        """Menghitung stok tiap alat dari transaksi. Dipanggil setelah transaksi dimuat."""
         peringatan = []
         for alat in self.__mgr.semua():
             dipinjam = ringan = berat = 0
