@@ -138,28 +138,15 @@ class Transaksi:
             Pengembalian(item.alat, jumlah, kondisi, tanggal or date.today()))
         self.perbarui_status()
 
-def pulihkan_pengembalian(
-    self,
-    kode: str,
-    jumlah: int,
-    kondisi: KondisiAlat,
-    tanggal: date
-) -> None:
-    """Memulihkan catatan pengembalian dari CSV tanpa mengubah stok alat."""
-    item = self.__cari_item(kode)
+    def pulihkan_pengembalian(self, kode: str, jumlah: int, kondisi: KondisiAlat, tanggal: date) -> None:
+        item = self.__cari_item(kode)
 
-    if item is None:
-        raise ValueError(
-            f"Alat {kode} tidak ada di transaksi {self.__id_transaksi}."
-        )
-
-    item.kembalikan(jumlah)
-
-    self.__daftar_pengembalian.append(
-        Pengembalian(item.alat, jumlah, kondisi, tanggal)
-    )
-
-    self.perbarui_status()
+        if item is None:
+            raise ValueError(f"Alat {kode} tidak ada di transaksi {self.__id_transaksi}.")
+        item.kembalikan(jumlah)
+        self.__daftar_pengembalian.append(
+            Pengembalian(item.alat, jumlah, kondisi, tanggal))
+        self.perbarui_status()
 
     def perbarui_status(self) -> None:
         if all(i.sudah_kembali_semua() for i in self.__daftar_item):
