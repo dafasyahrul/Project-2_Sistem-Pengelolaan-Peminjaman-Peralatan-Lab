@@ -1,9 +1,3 @@
-"""Penyimpanan CSV untuk semua transaksi (data/transaksi.csv).
-
-Satu transaksi bisa punya banyak baris:
-  PINJAM  = alat yang dipinjam (satu baris per alat)
-  KEMBALI = tiap kejadian pengembalian, lengkap dengan kondisi dan tanggal
-"""
 from datetime import date
 
 from managers.csv_dasar import baca_csv, teks, tulis_csv
