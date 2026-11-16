@@ -1,7 +1,8 @@
 from models.enums import KondisiAlat
 
 class MenuApp:
-    def __init__(self, mahasiswa_mgr, alat_mgr, transaksi_mgr):
+    def __init__(self, mahasiswa_mgr, alat_mgr, transaksi_mgr, penyimpanan) -> None:
+        self.__penyimpanan = penyimpanan
         self.__mahasiswa_mgr = mahasiswa_mgr
         self.__alat_mgr = alat_mgr
         self.__transaksi_mgr = transaksi_mgr
@@ -30,6 +31,8 @@ class MenuApp:
     def __jalankan_aman(self, aksi) -> None:
         try:
             aksi()
+            if self.__penyimpanan is not None:
+                self.__penyimpanan.simpan_semua()
         except ValueError as e:
             print(f"[GAGAL] {e}")
 

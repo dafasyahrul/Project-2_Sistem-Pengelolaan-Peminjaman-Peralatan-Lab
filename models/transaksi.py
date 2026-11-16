@@ -85,7 +85,6 @@ class Transaksi:
         self.__batas_kembali = batas_kembali
         self.__status = StatusTransaksi.DIPINJAM
 
-    # ---- getter ----
     @property
     def id_transaksi(self) -> str:
         return self.__id_transaksi
@@ -114,7 +113,6 @@ class Transaksi:
     def status(self) -> StatusTransaksi:
         return self.__status
 
-    # ---- perilaku ----
     def __cari_item(self, kode: str) -> ItemPeminjaman | None:
         kode = kode.strip().upper()
         for item in self.__daftar_item:
@@ -134,12 +132,34 @@ class Transaksi:
             raise ValueError(f"Alat {kode} tidak ada di transaksi {self.__id_transaksi}.")
         if item.sudah_kembali_semua():
             raise ValueError(f"Alat {item.alat.kode} sudah dikembalikan semua.")
-        # item.kembalikan memvalidasi jumlah sebelum stok alat diubah
         item.kembalikan(jumlah)
         item.alat.terima_kembali(jumlah, kondisi)
         self.__daftar_pengembalian.append(
             Pengembalian(item.alat, jumlah, kondisi, tanggal or date.today()))
         self.perbarui_status()
+
+def pulihkan_pengembalian(
+    self,
+    kode: str,
+    jumlah: int,
+    kondisi: KondisiAlat,
+    tanggal: date
+) -> None:
+    """Memulihkan catatan pengembalian dari CSV tanpa mengubah stok alat."""
+    item = self.__cari_item(kode)
+
+    if item is None:
+        raise ValueError(
+            f"Alat {kode} tidak ada di transaksi {self.__id_transaksi}."
+        )
+
+    item.kembalikan(jumlah)
+
+    self.__daftar_pengembalian.append(
+        Pengembalian(item.alat, jumlah, kondisi, tanggal)
+    )
+
+    self.perbarui_status()
 
     def perbarui_status(self) -> None:
         if all(i.sudah_kembali_semua() for i in self.__daftar_item):
